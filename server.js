@@ -5,11 +5,13 @@ const app = express();
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 
+const classifieds = require('./routes/classifieds');
+
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 
-const messages = require('./routes/classifieds');
-app.use('/classifieds', messages);
+app.use('/classifieds', classifieds);
 
 const port = process.env.PORT || 3000;
 
