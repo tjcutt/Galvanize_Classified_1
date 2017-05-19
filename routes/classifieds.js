@@ -14,7 +14,6 @@ router.get("/", (req, res, next) => {
         .catch(err => {
             res.send(err)
         })
-
 });
 
 router.get('/:id', (req, res, next) => {
@@ -30,10 +29,10 @@ router.get('/:id', (req, res, next) => {
         })
 });
 
-router.post('/',(req, res, next) => {
+router.post('/', (req, res, next) => {
     knex('classifieds')
-        .insert(params(req))
-        .returning('*')
+        .insert(req.body)
+        .returning(["id", "title", "description", "price", "item_image"])
         .then(classifieds => {
             res.json(classifieds[0])
         })
@@ -42,13 +41,13 @@ router.post('/',(req, res, next) => {
         })
 })
 
-router.patch('/:id',(req, res, next) => {
+router.patch('/:id', (req, res, next) => {
     knex('classifieds')
-        .update(params(req))
         .where({
             id: req.params.id
         })
-        .returning('*')
+        .update(req.body)
+        .returning(["id", "title", "description", "price", "item_image"])
         .then(classifieds =>
             res.json(classifieds[0]))
         .catch(err =>
@@ -61,8 +60,10 @@ router.delete('/:id', (req, res, next) => {
         .where({
             id: req.params.id
         })
-        .then(() =>
-            res.end())
+        .returning(["id", "title", "description", "price", "item_image"])
+        .then((classifieds) => {
+            res.json(classifieds[0])
+        })
         .catch((err) =>
             res.send(err))
 })
